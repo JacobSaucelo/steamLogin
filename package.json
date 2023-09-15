@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server/server.js"
+    "server": "nodemon server/server.js",
+    "client": "yarn --cwd client dev",
+    "dev": "concurrently \"yarn server\" \"yarn client\""
   },
   "repository": "https://github.com/JacobSaucelo/steamLogin.git",
-  "author": "csthesisgroup <jacobsaucelo32@gmail.com>",
+  "author": "Jacob Saucelo <jacobsaucelo32@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "concurrently": "^8.2.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
