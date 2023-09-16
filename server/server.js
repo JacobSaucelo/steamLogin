@@ -1,13 +1,22 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
+const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 const passportSteam = require("passport-steam");
 const SteamStrategy = passportSteam.Strategy;
 
 const port = process.env.PORT || 5000;
+const clientPort = process.env.CLIENT_PORT || 5173;
+
+const corsOptions = {
+  origin: process.env.BASE_URL + clientPort,
+  optionsSuccessStatus: 200,
+};
 
 const app = express();
+
+app.use(cors(corsOptions));
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -51,22 +60,29 @@ app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
-app.get("/", (req, res) => {
+app.get("/api/auth/user", (req, res) => {
+  console.log(req.user);
+  // SAVE DATA TO DATABASE
+
   res.send(req.user);
 });
 
 app.get(
   "/api/auth/steam",
-  passport.authenticate("steam", { failureRedirect: "/" }),
+  passport.authenticate("steam", {
+    failureRedirect: "/api/auth/user",
+  }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("/api/auth/user");
   }
 );
 
 app.get(
   "/api/auth/steam/return",
-  passport.authenticate("steam", { failureRedirect: "/" }),
+  passport.authenticate("steam", {
+    failureRedirect: "/api/auth/user",
+  }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("/api/auth/user");
   }
 );
